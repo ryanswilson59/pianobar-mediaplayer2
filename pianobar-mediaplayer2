@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+
+import os
+import mediaplayer
+
+# the code has to respond to dbus methods and also to whenever the fifo is written two
+# how do i make respond to both in a pythonic way
+
+
+def printer(fifo, unsure):
+    for i in range(3):
+        try:
+            dat = os.read(fifo, 2048)
+        except:
+            pass
+        print(dat, i)
+    print(unsure, type(unsure))
+    return True
+
+
+def main():
+    os.system("gnome-terminal -- pianobar")
+
+    import dbus.mainloop.glib
+    from gi.repository import GLib
+
+    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+
+    loop = GLib.MainLoop()
+    fifo = os.open("/home/ryan/.config/pianobar/media", os.O_RDWR | os.O_NONBLOCK)
+    GLib.io_add_watch(fifo, GLib.IO_IN, printer)
+    object = mediaplayer.mediaPlayer
+    loop.run()
+
+
+if __name__ == "__main__":
+    main()
