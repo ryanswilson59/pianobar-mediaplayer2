@@ -1,3 +1,4 @@
 #!/bin/sh
-echo "$@"
-echo "$@" > ~/.config/pianobar/media &
+
+echo "$@" > ~/.config/pianobar/media 
+cat $input > ~/.config/pianobar/media

@@ -2,19 +2,67 @@
 
 import os
 import mediaplayer
+import dbus
 
 # the code has to respond to dbus methods and also to whenever the fifo is written two
 # how do i make respond to both in a pythonic way
 
 
-def printer(fifo, unsure):
-    for i in range(3):
-        try:
-            dat = os.read(fifo, 2048)
-        except:
-            pass
-        print(dat, i)
-    print(unsure, type(unsure))
+class pianoPlayer(mediaplayer.mediaPlayer):
+    def __init__(self):
+        super().__init__()
+        self.lastCmd = None
+
+    def setLast(self, cmd):
+        # print(cmd)
+        ctrlCmds = [
+            b"songstart\n",
+            b"songfinish\n",
+            b"userlogin\n",
+            b"usergetstations\n",
+            b"stationfetchplayerlist\n",
+        ]
+        if cmd in ctrlCmds:
+            print(cmd)
+        if self.lastCmd == b"songstart\n":
+            self.updateMeta(cmd)
+
+        self.lastCmd = cmd
+
+    def updateMeta(self, cmd):
+        self.properties["org.mpris.MediaPlayer2.Player"]["PlaybackStatus"] = "Playing"
+
+        strCmd = cmd.decode("utf-8").split("\n")
+        # print(strCmd)
+
+        interface = "org.mpris.MediaPlayer2.Player"
+        propertyName = "Metadata"
+
+        newMeta = {
+            "mpris:trackid": dbus.ObjectPath(
+                "/path/to/bogus/id/that/does/not/exist", variant_level=1
+            )
+        }
+
+        for dFrag in strCmd:
+            key, *val = dFrag.split("=")
+            if key == "artist":
+                newMeta["xesam:artist"] = dbus.Array(
+                    [dbus.String(val[0])], variant_level=1
+                )
+            if key == "title":
+                newMeta["xesam:title"] = dbus.String(val[0], variant_level=1)
+            if key == "album":
+                newMeta["xesam:album"] = dbus.String(val[0], variant_level=1)
+        # print(newMeta)
+
+        self.properties[interface][propertyName] = newMeta
+        self.PropertiesChanged(interface, {propertyName: newMeta}, [])
+
+
+def readFifo(fifo, unsure, player):
+    dat = os.read(fifo, 4096)
+    player.setLast(dat)
     return True
 
 
@@ -28,8 +76,8 @@ def main():
 
     loop = GLib.MainLoop()
     fifo = os.open("/home/ryan/.config/pianobar/media", os.O_RDWR | os.O_NONBLOCK)
-    GLib.io_add_watch(fifo, GLib.IO_IN, printer)
-    object = mediaplayer.mediaPlayer
+    player = pianoPlayer()
+    GLib.io_add_watch(fifo, GLib.IO_IN, readFifo, player)
     loop.run()
 
 

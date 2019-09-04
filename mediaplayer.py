@@ -4,6 +4,9 @@ import dbus.service
 # god bless
 # https://stackoverflow.com/questions/3740903/python-dbus-how-to-export-interface-property
 
+# propPath="dbus.PROPERTIES_IFACE"
+propPath = "org.freedesktop.DBus.Properties"
+
 
 class mediaPlayer(dbus.service.Object):
     def __init__(self):
@@ -34,7 +37,10 @@ class mediaPlayer(dbus.service.Object):
             "CanSeek": False,
             "CanControl": False,
         }
-        self.properties = {"org.mpris.MediaPlayer2": baseProperties}
+        self.properties = {
+            "org.mpris.MediaPlayer2": baseProperties,
+            "org.mpris.MediaPlayer2.Player": playerProperties,
+        }
 
         basePropertiesCanWrite = {
             "CanQuit": False,
@@ -71,13 +77,11 @@ class mediaPlayer(dbus.service.Object):
             "org.mpris.MediaPlayer2.Playlists": {},
         }
 
-    @dbus.service.method("dbus.PROPERTIES_IFACE", in_signature="ss", out_signature="v")
+    @dbus.service.method(propPath, in_signature="ss", out_signature="v")
     def Get(self, interfaceName, propertyName):
         return self.GetAll(interfaceName)[propertyName]
 
-    @dbus.service.method(
-        "dbus.PROPERTIES_IFACE", in_signature="s", out_signature="a{sv}"
-    )
+    @dbus.service.method(propPath, in_signature="s", out_signature="a{sv}")
     def GetAll(self, interfaceName):
         if interfaceName in self.properties.keys():
             return self.properties[interfaceName]
@@ -87,7 +91,7 @@ class mediaPlayer(dbus.service.Object):
                 "The Media player does not implement {0}".format(interaceName),
             )
 
-    @dbus.service.method("dbus.PROPERTIES_IFACE", in_signature="ssv")
+    @dbus.service.method(propPath, in_signature="ssv")
     def Set(self, interfaceName, propertyName, newValue):
         if interfaceName in self.propertiesCanWrite.keys():
             if propertyName in self.propertiesCanWrite[interfaceName].keys():
@@ -108,7 +112,7 @@ class mediaPlayer(dbus.service.Object):
                 self.properties[interfaceName][propertyName] = newValue
                 self.PropertiesChanged(interfaceName, {propertyName: newValue}, [])
 
-    @dbus.service.signal("dbus.PROPERTIES_IFACE", signature="sa{sv}as")
+    @dbus.service.signal(propPath, signature="sa{sv}as")
     def PropertiesChanged(
         self, interfaceName, changedProperties, invalidatedProperties
     ):
