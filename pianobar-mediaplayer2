@@ -98,7 +98,9 @@ def main():
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
     loop = GLib.MainLoop()
-    fifo = os.open("/home/ryan/.config/pianobar/media", os.O_RDWR | os.O_NONBLOCK)
+    fifo = os.open(
+        os.getenv("HOME") + "/.config/pianobar/media", os.O_RDWR | os.O_NONBLOCK
+    )
     player = pianoPlayer(loop)
     GLib.io_add_watch(fifo, GLib.IO_IN, readFifo, player)
     loop.run()
