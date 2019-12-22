@@ -20,7 +20,7 @@ class pianoPlayer(mediaplayer.mediaPlayer):
         self.loop = loop
 
     def setLast(self, cmd):
-        # print(cmd)
+        print(cmd)
         ctrlCmds = [
             b"songstart\n",
             b"songfinish\n",
@@ -28,8 +28,7 @@ class pianoPlayer(mediaplayer.mediaPlayer):
             b"usergetstations\n",
             b"stationfetchplayerlist\n",
         ]
-        if cmd in ctrlCmds:
-            print(cmd)
+        
         if self.lastCmd == b"songstart\n":
             self.updateMeta(cmd)
 
@@ -90,7 +89,8 @@ def readFifo(fifo, unsure, player):
 
 
 def main():
-    os.system(os.getcwd()+"/start-pianobar.sh")
+    tv=os.path.dirname(os.path.realpath(__file__))
+    os.system(tv+"/start-pianobar.sh")
 
     import dbus.mainloop.glib
     from gi.repository import GLib
