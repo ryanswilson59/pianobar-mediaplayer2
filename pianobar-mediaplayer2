@@ -90,7 +90,7 @@ def readFifo(fifo, unsure, player):
 
 
 def main():
-    os.system("./start-painobar.sh")
+    os.system(os.getcwd()+"/start-pianobar.sh")
 
     import dbus.mainloop.glib
     from gi.repository import GLib
