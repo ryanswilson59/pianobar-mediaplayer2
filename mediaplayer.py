@@ -1,6 +1,6 @@
 import dbus
 import dbus.service
-import random
+# import random
 
 # god bless
 # https://stackoverflow.com/questions/3740903/python-dbus-how-to-export-interface-property
@@ -12,8 +12,8 @@ propPath = "org.freedesktop.DBus.Properties"
 class mediaPlayer(dbus.service.Object):
     def __init__(self):
         self.bus = dbus.SessionBus()
-        ins=str(random.randrange(10000))
-        name = dbus.service.BusName("org.mpris.MediaPlayer2.pianobar.instance"+ins, bus=self.bus)
+        # ins=str(random.randrange(10000))
+        name = dbus.service.BusName("org.mpris.MediaPlayer2.pianobar", bus=self.bus)
         super().__init__(name, "/org/mpris/MediaPlayer2")
 
         baseProperties = {
