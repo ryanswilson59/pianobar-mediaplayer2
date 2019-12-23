@@ -21,13 +21,13 @@ class mediaPlayer(dbus.service.Object):
             "CanRaise": False,
             "HasTrackList": False,
             "Identity": "Please Set",
-            "SupportedUriSchemes": [],
-            "SupportedMimeTypes": [],
+            "SupportedUriSchemes": ["none"],
+            "SupportedMimeTypes": ["none"],
         }
         playerProperties = {
             "PlaybackStatus": "Stopped",
             "Rate": 1.0,
-            "Metadata": False,
+            "Metadata": {"mpris:trackid":dbus.ObjectPath("/bogus/id",variant_level=1)},
             "Volume": 1.0,
             "Position": 1,
             "MinimumRate": 1.0,
