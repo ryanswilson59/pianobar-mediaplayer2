@@ -17,7 +17,7 @@ class pianoPlayer(mediaplayer.mediaPlayer):
         self.properties["org.mpris.MediaPlayer2.Player"]["CanControl"] = True
         self.properties["org.mpris.MediaPlayer2.Player"]["CanGoNext"] = True
         self.properties["org.mpris.MediaPlayer2"]["CanQuit"] = True
-        self.properties["org.mpris.MediaPlayer2"]["Identity"] = "PianoBar"
+        self.properties["org.mpris.MediaPlayer2"]["Identity"] = "pianobar"
 
         self.loop = loop
 
