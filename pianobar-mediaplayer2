@@ -15,6 +15,7 @@ class pianoPlayer(mediaplayer.mediaPlayer):
         self.properties["org.mpris.MediaPlayer2.Player"]["CanPlay"] = True
         self.properties["org.mpris.MediaPlayer2.Player"]["CanPause"] = True
         self.properties["org.mpris.MediaPlayer2.Player"]["CanControl"] = True
+        self.properties["org.mpris.MediaPlayer2.Player"]["CanGoNext"] = True
         self.properties["org.mpris.MediaPlayer2"]["CanQuit"] = True
         self.properties["org.mpris.MediaPlayer2"]["Identity"] = "PianoBar"
 
@@ -76,6 +77,10 @@ class pianoPlayer(mediaplayer.mediaPlayer):
     @dbus.service.method("org.mpris.MediaPlayer2.Player")
     def PlayPause(self):
         os.system("echo p > ~/.config/pianobar/ctl")
+
+    @dbus.service.method("org.mpris.MediaPlayer2.Player")
+    def Next(self):
+        os.system("echo n > ~/.config/pianobar/ctl")
 
     @dbus.service.method("org.mpris.MediaPlayer2")
     def Quit(self):
