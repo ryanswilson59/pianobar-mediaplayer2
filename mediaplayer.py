@@ -163,5 +163,3 @@ class mediaPlayer(dbus.service.Object):
     @dbus.service.method("org.mpris.MediaPlayer2.Player", in_signature="s")
     def OpenUri(self, URI):
         pass
-
-# vim: set tabstop=4 expandtab
