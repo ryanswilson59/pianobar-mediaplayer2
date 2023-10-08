@@ -71,23 +71,23 @@ class pianoPlayer(mediaplayer.mediaPlayer):
 
     @dbus.service.method("org.mpris.MediaPlayer2.Player")
     def Play(self):
-        os.system("echo P > ~/.config/pianobar/ctl")
+        open(os.getenv("HOME") + "/.config/pianobar/ctl", "w").write("P\n")
 
     @dbus.service.method("org.mpris.MediaPlayer2.Player")
     def Pause(self):
-        os.system("echo S > ~/.config/pianobar/ctl")
+        open(os.getenv("HOME") + "/.config/pianobar/ctl", "w").write("S\n")
 
     @dbus.service.method("org.mpris.MediaPlayer2.Player")
     def PlayPause(self):
-        os.system("echo p > ~/.config/pianobar/ctl")
+        open(os.getenv("HOME") + "/.config/pianobar/ctl", "w").write("p\n")
 
     @dbus.service.method("org.mpris.MediaPlayer2.Player")
     def Next(self):
-        os.system("echo n > ~/.config/pianobar/ctl")
+        open(os.getenv("HOME") + "/.config/pianobar/ctl", "w").write("n\n")
 
     @dbus.service.method("org.mpris.MediaPlayer2")
     def Quit(self):
-        os.system("echo q > ~/.config/pianobar/ctl")
+        open(os.getenv("HOME") + "/.config/pianobar/ctl", "w").write("q\n")
         self.loop.quit()
 
 
