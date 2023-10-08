@@ -30,19 +30,22 @@ class pianoPlayer(mediaplayer.mediaPlayer):
             b"usergetstations\n",
             b"stationfetchplayerlist\n",
         ]
-        
+
         if self.lastCmd == b"songstart\n":
             self.updateMeta(cmd)
 
         self.lastCmd = cmd
 
     def updateMeta(self, cmd):
-        self.properties["org.mpris.MediaPlayer2.Player"]["PlaybackStatus"] = "Playing"
+        interface = "org.mpris.MediaPlayer2.Player"
+        propertyName = "PlaybackStatus"
+
+        self.properties[interface][propertyName] = "Playing"
+        self.PropertiesChanged(interface, {propertyName: "Playing"}, [])
 
         strCmd = cmd.decode("utf-8").split("\n")
         # print(strCmd)
 
-        interface = "org.mpris.MediaPlayer2.Player"
         propertyName = "Metadata"
 
         newMeta = {
